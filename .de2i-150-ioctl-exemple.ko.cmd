@@ -1,0 +1,1 @@
+cmd_/home/marcus/IHS/de2i-150-ioctl-exemple.ko := ld -r -m elf_x86_64 --build-id=sha1  -T scripts/module.lds -o /home/marcus/IHS/de2i-150-ioctl-exemple.ko /home/marcus/IHS/de2i-150-ioctl-exemple.o /home/marcus/IHS/de2i-150-ioctl-exemple.mod.o;  true
