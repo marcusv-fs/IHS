@@ -285,9 +285,9 @@ static int my_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
 	printk("my_driver: PCI device resources start at bar 0: 0x%lx\n", resource);
 	
 	display_r = ioremap(resource + 0xC000, 0x20);
-	display_l = ioremap(resource + 0xC080, 0x20);
+	display_l = ioremap(resource + 0xC140, 0x20);
 	switches = ioremap(resource + 0xC040, 0x20);
-	p_buttons = ioremap(resource + 0xC140, 0x20);
+	p_buttons = ioremap(resource + 0xC080, 0x20);
 	leds_vermelhos = ioremap(resource + 0xC0B0, 0x20);
 	leds_verdes = ioremap(resource + 0xC0F0, 0x20);
 
