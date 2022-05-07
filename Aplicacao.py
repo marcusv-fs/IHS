@@ -12,11 +12,12 @@ def act_iniciar():
     texto.pack()
     cx_texto.pack()
 
-    bt_pg_txt = Button(janela, text= "Confirma", command= act_confirma, fg = "white", bg = "gray")
-    bt_pg_txt.grid(column=0, row=5, padx=10, pady=10)
+    bt_pg_txt = Button(janela, text= "Confirma", command= act_confirma(cx_texto.get()), fg = "white", bg = "gray")
+    bt_pg_txt.pack()
 
-def act_confirma():
-    if(cx_texto.get() == "a" || == "A"):
+def act_confirma(escolha):
+    if(escolha == "a" | escolha == "A"):
+        print("cozinha")
 
 
 def act_sobre():
