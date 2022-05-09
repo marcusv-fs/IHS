@@ -1,5 +1,6 @@
 from tkinter import *
 from sobre import *
+from tl_porta import *
 
 tela = Tk()
 tela.geometry('1920x1080')
@@ -9,15 +10,11 @@ tela.attributes('-fullscreen',True)
 f = ("Times bold", 14)
 
 def Jogar():
-    import tl_sala
-    
-
+    criar_porta()
 
 def Sobre():
-    #tela.destroy()
     criar_sobre()
-    
-    
+      
 def Sair():
     exit(0)
 
