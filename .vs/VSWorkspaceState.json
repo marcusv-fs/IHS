@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Imagens"
+    "\\Imagens",
+    "\\Jogo"
   ],
-  "SelectedNode": "\\teste.py",
+  "SelectedNode": "\\Jogo\\menu.py",
   "PreviewInSolutionExplorer": false
 }
