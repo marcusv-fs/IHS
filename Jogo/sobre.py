@@ -16,7 +16,7 @@ def criar_sobre():
 
     Label(
         tela,
-        text="Life is short do what you want",
+        text="Desenvolvido por atss, lnb, mvfs, rrm2, vgc3\n",
         padx=20,
         pady=20,
         bg='#ffbf00',
