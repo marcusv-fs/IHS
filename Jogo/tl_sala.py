@@ -2,6 +2,9 @@ from tkinter import *
 from tl_cozinha import *
 from tl_quarto import *
 from tl_garagem import *
+import os, sys #necessária para as funções de write e read
+#from fcntl import ioctl
+from ioctl_cmds import *#defines para iotctl
 
 def criar_sala():
     tela = Tk()
@@ -10,50 +13,62 @@ def criar_sala():
     tela['bg']='#5d8a82'
     tela.attributes('-fullscreen',True)
     f = ("Times bold", 14)
+    bg = PhotoImage(file='Imagens/sala.png')
 
-    def Quarto():
-        tela.destroy()
-        criar_quarto
+    canvas = Canvas(tela)
+    canvas.pack(fill="both", expand=True)
+    canvas.create_image( (1920/2), (1080/2), image = bg, anchor = "center")
 
-    def Cozinha():
+    def Voltar():
         tela.destroy()
-        criar_cozinha()
 
-    def Garagem():
+    def quarto():
         tela.destroy()
-        criar_garagem()
+        import tl_quarto
+
+    def cozinha():
+        tela.destroy()
+        import tl_cozinha
+
+    def garagem():
+        tela.destroy()
+        import tl_garagem
 
     Label(
-        tela,
-        text="Procure pela bomba",
+        canvas,
+        text="Seu segundo desafio é encontrar o local onde o refém está!!\nVc terá que informar uma das três seguintes opções no terminal: a - cozinha, w - garagem, d - quarto\nEscolha logo! O tempo está passando!!!\nVc só tem duas chances antes que os capangas ouçam seus passos!!!",
         padx=20,
         pady=20,
         bg='#ffbf00',
         font=f
-    ).pack(expand=True, fill=BOTH)
+    ).pack(side=TOP, fill=X)
 
     Button(
-        tela, 
+        canvas, 
+        text="Voltar", 
+        font=f,
+        command=Voltar
+        ).pack(fill=X, side=BOTTOM)
+
+    Button(
+        canvas, 
         text="Garagem", 
         font=f,
-        command=Garagem
-        ).pack(fill=X, expand=TRUE, side=LEFT)
+        command=garagem
+        ).pack(fill=X, side=BOTTOM)
 
     Button(
-        tela, 
+        canvas, 
         text="Quarto", 
         font=f,
-        command=Quarto
-        ).pack(fill=X, expand=TRUE, side=LEFT)
+        command=quarto
+        ).pack(fill=X, side=BOTTOM)
 
     Button(
-        tela, 
-        text="Cozinha", 
+        canvas, 
+        text="Coziha", 
         font=f,
-        command=Cozinha
-        ).pack(fill=X, expand=TRUE, side=LEFT)
+        command=cozinha
+        ).pack(fill=X, side=BOTTOM)
 
     tela.mainloop()
-
-
-

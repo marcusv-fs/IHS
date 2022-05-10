@@ -8,7 +8,7 @@ def criar_sobre():
     tela.attributes('-fullscreen',True)
     f = ("Times bold", 14)
 
-    def Voltar():
+    def Voltar2():
         tela.destroy()
 
     Label(
@@ -24,6 +24,6 @@ def criar_sobre():
         tela, 
         text="Voltar", 
         font=f,
-        command=Voltar
+        command=Voltar2
         ).pack(fill=X, expand=TRUE, side=LEFT)
     tela.mainloop()
