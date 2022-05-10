@@ -3,7 +3,7 @@ from sobre import *
 from tl_porta import *
 import os, sys #necessária para as funções de write e read
 from ioctl_cmds import *
-#from fcntl import ioctl
+from fcntl import ioctl
 
 def criar_menu():
 
