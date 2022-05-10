@@ -464,7 +464,6 @@ def criar_sobre():
 
     def Voltar2():
         tela.destroy()
-        import menu
         criar_menu()
 
     Label(
