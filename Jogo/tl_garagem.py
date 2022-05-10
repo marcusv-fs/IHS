@@ -2,10 +2,10 @@ from tkinter import *
 from tl_sala import *
 from tl_bomb import *
 import os, sys #necessária para as funções de write e read
-#from fcntl import ioctl
+from fcntl import ioctl
 from ioctl_cmds import *#defines para iotctl
 
-#fd = os.open("/dev/mydev", os.O_RDWR)
+fd = os.open("/dev/mydev", os.O_RDWR)
 
 def bomb():
     os.close(fd)
@@ -75,6 +75,7 @@ def criar_garagem():
     f = ("Times bold", 14)
     #falta a foto
 
+    bg = PhotoImage(file = "garagem.png")
     canvas = Canvas(tela)
     canvas.pack(fill="both", expand=True)
     canvas.create_image( (1920/2), (1080/2), image = bg, anchor = "center")
@@ -86,7 +87,6 @@ def criar_garagem():
     #algarismos (em decimal) na seguinte ordem: 12 -> 8 -> 15 -> 2. O usuário só tem uma chance, caso contrário perde. Para enviar cada um dos
     #algarismos, envie no terminal a letra 'a'.
     tela.config(bg = "black")
-    img = PhotoImage(file='hacker.png')
     tela.title("CALL GATE: O RESGATE")
     imagem = Label(tela, image=img, height=400, width=700)
     imagem.grid(column=0, row=0)
