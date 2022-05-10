@@ -8,6 +8,7 @@ import os, sys #necessária para as funções de write e read
 from ioctl_cmds import *#defines para iotctl
 
 def criar_sala():
+    import menu
     tela = Tk()
     tela.geometry('1920x1080')
     tela.title('GATE: O RESGATE')
