@@ -2,7 +2,7 @@ from tkinter import *
 from tl_sala import *
 
 def criar_quarto():
-    tela = Toplevel()
+    tela = Tk()
     tela.geometry('1920x1080')
     tela.title('GATE: O RESGATE')
     tela['bg']='#5d8a82'
