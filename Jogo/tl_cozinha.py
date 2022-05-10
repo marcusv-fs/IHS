@@ -1,5 +1,5 @@
 from tkinter import *
-from tl_sala import *
+from tl_sala import criar_sala
 
 def criar_cozinha():
     tela = Tk()
