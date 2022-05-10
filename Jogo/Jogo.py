@@ -76,7 +76,7 @@ def criar_garagem():
     f = ("Times bold", 14)
     #falta a foto
 
-    bg = PhotoImage(file = "garagem.png")
+    bg = PhotoImage(file = "../Imagens/garagem.png")
     canvas = Canvas(tela)
     canvas.pack(fill="both", expand=True)
     canvas.create_image( (1920/2), (1080/2), image = bg, anchor = "center")
