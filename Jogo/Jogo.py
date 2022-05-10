@@ -145,7 +145,7 @@ def criar_bomb():
 
     def Voltar():
         tela.destroy()
-        import menu
+        criar_menu()
 
     label = Label(
         canvas,
@@ -253,7 +253,6 @@ def criar_quarto():
     tela.mainloop()
 
 def criar_sala():
-    import menu
     tela = Tk()
     tela.geometry('1920x1080')
     tela.title('GATE: O RESGATE')
