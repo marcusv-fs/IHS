@@ -88,7 +88,11 @@ def senha():#O PRIMEIRO DESAFIO
         chorou_bb(0)
 
 def criar_porta():
-    tela = Toplevel()
+    def Voltar():
+        os.close(fd)
+        tela.destroy()
+
+    tela = Tk()
     tela.geometry('1920x1080')
     tela.title('GATE: O RESGATE')
     tela['bg']='#5d8a82'
@@ -127,8 +131,6 @@ def criar_porta():
         command=Voltar
         ).pack(fill=X, expand=TRUE, side=LEFT)
 
-    def Voltar():
-        os.close(fd)
-        tela.destroy()
+    
 
     tela.mainloop()

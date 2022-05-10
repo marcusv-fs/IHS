@@ -1,4 +1,5 @@
 from tkinter import *
+from tl_sala import *
 
 def criar_quarto():
     tela = Toplevel()
@@ -7,7 +8,7 @@ def criar_quarto():
     tela['bg']='#5d8a82'
     tela.attributes('-fullscreen',True)
     f = ("Times bold", 14)
-    bg = PhotoImage(file='Imagens/quarto.png')
+    bg = PhotoImage(file='../Imagens/quarto.png')
 
     canvas = Canvas(tela)
     canvas.pack(fill="both", expand=True)
@@ -15,7 +16,7 @@ def criar_quarto():
 
     def Voltar():
         tela.destroy()
-        import tl_sala
+        criar_sala()
 
     Label(
         canvas,

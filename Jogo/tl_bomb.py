@@ -2,21 +2,21 @@ from tkinter import *
 import threading
 import time
 
-remaining = 500
-
-tela = Tk()
-tela.geometry('1920x1080')
-tela.title('GATE: O RESGATE')
-tela['bg']='#5d8a82'
-tela.attributes('-fullscreen',True)
-f = ("Times bold", 34)
-bg = PhotoImage(file='../Imagens/bomb.png')
-
-canvas = Canvas(tela)
-canvas.pack(fill="both", expand=True)
-canvas.create_image( (1920/2), (1080/2), image = bg, anchor = "center")
-
 def criar_bomb():
+    remaining = 500
+
+    tela = Tk()
+    tela.geometry('1920x1080')
+    tela.title('GATE: O RESGATE')
+    tela['bg']='#5d8a82'
+    tela.attributes('-fullscreen',True)
+    f = ("Times bold", 34)
+    bg = PhotoImage(file='../Imagens/bomb.png')
+
+    canvas = Canvas(tela)
+    canvas.pack(fill="both", expand=True)
+    canvas.create_image( (1920/2), (1080/2), image = bg, anchor = "center")
+
     def Voltar():
         tela.destroy()
         import menu

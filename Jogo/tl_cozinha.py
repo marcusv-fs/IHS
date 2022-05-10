@@ -1,7 +1,8 @@
 from tkinter import *
+from tl_sala import *
 
 def criar_cozinha():
-    tela = Toplevel()
+    tela = Tk()
     tela.geometry('1920x1080')
     tela.title('GATE: O RESGATE')
     tela['bg']='#5d8a82'
@@ -15,7 +16,7 @@ def criar_cozinha():
 
     def Voltar():
         tela.destroy()
-        import tl_sala
+        criar_sala()
 
     Label(
         canvas,

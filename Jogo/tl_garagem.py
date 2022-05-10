@@ -1,5 +1,6 @@
 from tkinter import *
 from tl_sala import *
+from tl_bomb import *
 import os, sys #necessária para as funções de write e read
 from fcntl import ioctl
 from ioctl_cmds import *#defines para iotctl

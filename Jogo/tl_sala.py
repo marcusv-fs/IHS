@@ -2,6 +2,7 @@ from tkinter import *
 from tl_cozinha import *
 from tl_quarto import *
 from tl_garagem import *
+from menu import *
 import os, sys #necessária para as funções de write e read
 #from fcntl import ioctl
 from ioctl_cmds import *#defines para iotctl
@@ -13,7 +14,7 @@ def criar_sala():
     tela['bg']='#5d8a82'
     tela.attributes('-fullscreen',True)
     f = ("Times bold", 14)
-    bg = PhotoImage(file='Imagens/sala.png')
+    bg = PhotoImage(file='../Imagens/sala.png')
 
     canvas = Canvas(tela)
     canvas.pack(fill="both", expand=True)
@@ -21,18 +22,19 @@ def criar_sala():
 
     def Voltar():
         tela.destroy()
+        criar_menu()
 
     def quarto():
         tela.destroy()
-        import tl_quarto
+        criar_quarto()
 
     def cozinha():
         tela.destroy()
-        import tl_cozinha
+        criar_cozinha()
 
     def garagem():
         tela.destroy()
-        import tl_garagem
+        criar_garagem()
 
     Label(
         canvas,
