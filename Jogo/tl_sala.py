@@ -38,7 +38,7 @@ def criar_sala():
 
     Label(
         canvas,
-        text="Seu segundo desafio é encontrar o local onde o refém está!!\nVc terá que informar uma das três seguintes opções no terminal: a - cozinha, w - garagem, d - quarto\nEscolha logo! O tempo está passando!!!\nVc só tem duas chances antes que os capangas ouçam seus passos!!!",
+        text="Seu segundo desafio é encontrar o local onde o refém está!!Escolha logo! O tempo está passando!!!\nVc só tem duas chances antes que os capangas ouçam seus passos!!!",
         padx=20,
         pady=20,
         bg='#ffbf00',
@@ -68,7 +68,7 @@ def criar_sala():
 
     Button(
         canvas, 
-        text="Coziha", 
+        text="Cozinha", 
         font=f,
         command=cozinha
         ).pack(fill=X, side=BOTTOM)

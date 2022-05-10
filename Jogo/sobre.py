@@ -1,4 +1,5 @@
 from tkinter import *
+from menu import *
 
 def criar_sobre():
     tela = Tk()
@@ -10,6 +11,7 @@ def criar_sobre():
 
     def Voltar2():
         tela.destroy()
+        criar_menu()
 
     Label(
         tela,
