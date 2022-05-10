@@ -440,16 +440,7 @@ def criar_porta():
     botao.grid(column=0, row=30, padx=10, pady=10)
     textinho = "Após apertar o ""Próximo"", pode fechar essa tela"
     texto = Label(tela, text=textinho, fg='red',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=35, padx=10, pady=10)
-
-    Button(
-        tela, 
-        text="Abrir", 
-        font=f,
-        command=Voltar
-        ).pack(fill=X, expand=TRUE, side=BOTTOM)
-
-    
+    texto.grid(column=0, row=35, padx=10, pady=10)   
 
     tela.mainloop()
 
