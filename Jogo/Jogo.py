@@ -89,7 +89,7 @@ def criar_garagem():
     #algarismos, envie no terminal a letra 'a'.
     tela.config(bg = "black")
     tela.title("CALL GATE: O RESGATE")
-    imagem = Label(tela, image=img, height=400, width=700)
+    imagem = Label(tela, image=bg, height=400, width=700)
     imagem.grid(column=0, row=0)
     textinho = "Seu terceiro desafio é hackear o sistema de vigilância da garagem mandando cinco algarismos pelos switches, os quais correspondem ao endereço"
     texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
