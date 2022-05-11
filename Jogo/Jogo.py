@@ -7,15 +7,24 @@ import time
 
 
 fd = os.open("/dev/mydev", os.O_RDWR)
+remaining = 10
 
-def bomb():
-    os.close(fd)
-    criar_bomb()
+valor = [0,0,0,0]
+i = 0
+try1 = 0
 
-def Sair():
-    exit(0)
+array_switches = [0,0,0,0]
+j=0
+
 
 def chorou_bb(num):
+    tela = Tk()
+    tela.geometry('1920x1080')
+    tela.title('GATE: O RESGATE')
+    tela['bg']='#5d8a82'
+    tela.attributes('-fullscreen',True)
+    f = ("Times bold", 14)
+
     #função que abre a janela em caso de derrota
     ioctl(fd, WR_L_DISPLAY)#carinha de choro nos displays da esquerda
     data = 0x2e3f3f3a
@@ -29,8 +38,7 @@ def chorou_bb(num):
     data = 0x00000000
     os.write(fd, data.to_bytes(4, 'little'))
     os.close(fd)
-    janela = Toplevel()
-    janela.config(bg = "red")
+
     if(num == 0):
         textinho = "O alarme tocou e os bandidos encurralarram vc e sua equipe :(\nF to respect"
     elif(num == 1):
@@ -39,33 +47,30 @@ def chorou_bb(num):
         textinho = "Foi identificado que o sistema estava sendo invadido e os bandidos encurralarram vc e sua equipe :(\nF to respect"
     else:
         textinho = "KABOOM? Yes Rico, KABOOM!\nF to respect"
-    texto = Label(janela, text=textinho, fg='black',font="Arial 20 bold", bg="red")
-    texto.grid(column=0, row=5, padx=10, pady=10)
-    botao = Button(janela, text="F", command=Sair, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
-    botao.grid(column=0, row=10, padx=10, pady=10)
 
-def vigilancia():
-        array_switches = [0,0,0,0]
-        for i in range(4):
-            input()
-            ioctl(fd, RD_SWITCHES) #setando para ler os switches
-            array_switches[i] = os.read(fd, 1) #lendo um byte dos switches
-        if(array_switches[0] == b'\x0c' and array_switches[1] == b'\x08' and array_switches[2] == b'\x0f' and array_switches[3] == b'\x02'): #resposta: C8F2
-            ioctl(fd, WR_RED_LEDS) #se acertou, os leds vermelhos são apagados e os verdes acesos
-            data = 0x0
-            os.write(fd, data.to_bytes(4, 'little'))
-            ioctl(fd, WR_GREEN_LEDS)
-            data = 0xFFFFFFFF
-            os.write(fd, data.to_bytes(4, 'little'))
-            bomb()
-        else:
-            ioctl(fd, WR_RED_LEDS) #se errou, os leds vermelhos são acesos e os verdes apagados
-            data = 0xFFFFFFFF
-            os.write(fd, data.to_bytes(4, 'little'))
-            ioctl(fd, WR_GREEN_LEDS)
-            data = 0x0
-            os.write(fd, data.to_bytes(4, 'little'))
-            chorou_bb(2)
+
+    def Voltar():
+        tela.destroy()
+        criar_menu()
+
+    Label(
+        tela,
+        text=textinho,
+        padx=20,
+        pady=20,
+        bg='red',
+        font=f
+    ).pack(expand = TRUE, fill=BOTH)
+
+    Button(
+        tela, 
+        text="F", 
+        font=f,
+        command= Voltar
+        ).pack(fill=X, side=BOTTOM)
+
+
+    tela.mainloop()
 
 def criar_garagem():
     tela = Tk()
@@ -74,67 +79,83 @@ def criar_garagem():
     tela['bg']='#5d8a82'
     tela.attributes('-fullscreen',True)
     f = ("Times bold", 14)
-    #falta a foto
+
+    def bomb():
+        os.close(fd)
+        criar_bomb()
+
+    def vigilancia():
+            global array_switches
+            if(array_switches[0] == b'\x0c' and array_switches[1] == b'\x08' and array_switches[2] == b'\x0f' and array_switches[3] == b'\x02'): #resposta: C8F2
+                ioctl(fd, WR_RED_LEDS) #se acertou, os leds vermelhos são apagados e os verdes acesos
+                data = 0x0
+                os.write(fd, data.to_bytes(4, 'little'))
+                ioctl(fd, WR_GREEN_LEDS)
+                data = 0xFFFFFFFF
+                os.write(fd, data.to_bytes(4, 'little'))
+                tela.destroy()
+                criar_bomb()
+            else:
+                ioctl(fd, WR_RED_LEDS) #se errou, os leds vermelhos são acesos e os verdes apagados
+                data = 0xFFFFFFFF
+                os.write(fd, data.to_bytes(4, 'little'))
+                ioctl(fd, WR_GREEN_LEDS)
+                data = 0x0
+                os.write(fd, data.to_bytes(4, 'little'))
+                tela.destroy()
+                chorou_bb(2)
+
+    def click2():
+        global array_switches
+        global j
+
+        ioctl(fd, RD_SWITCHES) #setando para ler os switches
+        array_switches[j] = os.read(fd, 1) #lendo um byte dos switches
+        j+=1
 
     bg = PhotoImage(file = "../Imagens/garagem.png")
     canvas = Canvas(tela)
     canvas.pack(fill="both", expand=True)
     canvas.create_image( (1920/2), (1080/2), image = bg, anchor = "center")
 
-#TERCEIRO DESAFIO
+    #TERCEIRO DESAFIO
     #Consiste em hackear o sistema de vigilância da garagem mandando cinco algarismos pelos switches, os quais correspondem ao endereço 
     #que é a soma dos endereços que apareçem nos displays da esquerda (origem) e da direita (offset). Endereço de origem, mostrado em hexa: 0456.
     #Offset, mostrado em hexa: 8392. Resultado: 04560 + 08392 = C8F2. Então, pelos switches, o usuário deve mandar os seguintes
     #algarismos (em decimal) na seguinte ordem: 12 -> 8 -> 15 -> 2. O usuário só tem uma chance, caso contrário perde. Para enviar cada um dos
     #algarismos, envie no terminal a letra 'a'.
-    tela.config(bg = "black")
-    tela.title("CALL GATE: O RESGATE")
-    imagem = Label(tela, image=bg, height=400, width=700)
-    imagem.grid(column=0, row=0)
-    textinho = "Seu terceiro desafio é hackear o sistema de vigilância da garagem mandando cinco algarismos pelos switches, os quais correspondem ao endereço"
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=5, padx=10, pady=10)
-    textinho = "que é a soma dos endereços que apareçem nos displays da esquerda (origem) e da direita (offset)."
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=6, padx=10, pady=10)
-    textinho = "Vc só tem uma chance!!\nMande um algarismo por vez e nessa ordem: mais significativos -> menos significativos."
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=10, padx=10, pady=10)
-    textinho = "Para mandar através dos switches é preciso enviar a letra 'a' no terminal.\nLembrando que os switches enviam um número em binário!"
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=15, padx=10, pady=10)
-    botao = Button(tela, text="Próximo", command=vigilancia, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
-    botao.grid(column=0, row=20, padx=20, pady=20)
-    textinho = "Quando chegar no próximo desafio, pode fechar essa tela."
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=25, padx=10, pady=10)
+
+    Label(
+        canvas,
+        text="""Seu terceiro desafio é hackear o sistema de vigilância da garagem mandando quatro algarismos pelos switches, os quais correspondem ao endereço
+                que é a soma dos endereços que apareçem nos displays da esquerda (origem) e da direita (offset).
+                Vc só tem uma chance!!\nMande um algarismo por vez e nessa ordem: mais significativos -> menos significativos.
+                Para mandar através dos switches é preciso clicar em "Enter" para cada valor. Depois, clicar em "Confirma".\nLembrando que os switches enviam um número em binário!
+                Quando chegar no próximo desafio, pode fechar essa tela.""",
+        padx=20,
+        pady=20,
+        bg='#ffbf00',
+        font=f
+    ).pack(side=TOP, fill=X)
+    botao = Button(canvas, text="Confirma", command=vigilancia, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
+    botao.pack(fill=X, side=BOTTOM)
+
+    botao = Button(canvas, text="Enter", command=click2, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
+    botao.pack(fill=X, side=BOTTOM)
+
     ioctl(fd, WR_L_DISPLAY)#origem
-    data = 0xff191202 #
+    data = 0x40191202 
     os.write(fd, data.to_bytes(4, 'little'))
     ioctl(fd, WR_R_DISPLAY)#offset
     data = 0x00301024
     os.write(fd, data.to_bytes(4, 'little'))
 
-    Button(
-        canvas, 
-        text="Voltar", 
-        font=f,
-        command=Voltar
-        ).pack(fill=X, side=BOTTOM)
-    
-    def Voltar():
-        os.close(fd)
-        tela.destroy()
-
     tela.mainloop()
 
 def criar_bomb():
-    remaining = 500
-
     tela = Tk()
     tela.geometry('1920x1080')
     tela.title('GATE: O RESGATE')
-    tela['bg']='#5d8a82'
     tela.attributes('-fullscreen',True)
     f = ("Times bold", 34)
     bg = PhotoImage(file='../Imagens/bomb.png')
@@ -143,9 +164,13 @@ def criar_bomb():
     canvas.pack(fill="both", expand=True)
     canvas.create_image( (1920/2), (1080/2), image = bg, anchor = "center")
 
-    def Voltar():
+    def Desarmar():
+        texto = cx_txt.get()
         tela.destroy()
-        criar_menu()
+        if(texto == "7355608"):
+            criar_sobre()
+        else:
+            chorou_bb(3)
 
     label = Label(
         canvas,
@@ -156,29 +181,53 @@ def criar_bomb():
     )
     label.pack(side=TOP)
 
+    Label(
+        canvas,
+        text="Nesse momento vc se lembra do pai dos FPS: 7355608",
+        padx=20,
+        pady=20,
+        bg='#ffbf00',
+        font=f
+    ).pack(side=TOP, fill=X)
+
+    cx_txt = Entry(tela, width = 20)
+    cx_txt.pack(fill=X, side=BOTTOM, pady = 10)
+
     bt = Button(
         canvas, 
-        text="Voltar", 
+        text="Desarmar", 
         font=f,
-        command=Voltar,
+        command=Desarmar,
     )
     bt.pack(fill=X, side=BOTTOM)
+
+    
 
     def clock():
         global remaining
     
-        while remaining>0:
+        while remaining>=0:
             mins, secs = divmod(remaining, 60)
             timeformat = '{:02d}:{:02d}'.format(mins, secs)
             remaining -= 1
             label.config(text=timeformat)
             tela.update()
-            time.sleep(1)
+            time.sleep(1) 
 
-    threading.Thread(target=clock).start()
+        tela.destroy()
+        
+    global remaining
+
+    t1 = threading.Thread(target=clock)
+    t1.start()
+
     button1_canvas = canvas.create_window(100, 10, anchor = "nw")
+    
 
     tela.mainloop()
+    chorou_bb(3)
+
+
 
 def criar_cozinha():
     tela = Tk()
@@ -340,44 +389,14 @@ def criar_porta():
         criar_sala()
 
     def Sair():
-        exit(0)
-
-    def chorou_bb(num):
-        #função que abre a janela em caso de derrota
-        ioctl(fd, WR_L_DISPLAY)#carinha de choro nos displays da esquerda
-        data = 0x2e3f3f3a
-        os.write(fd, data.to_bytes(4, 'little'))
-        ioctl(fd, WR_R_DISPLAY)#carinha de choro nos displays da direita
-        os.write(fd, data.to_bytes(4, 'little'))
-        ioctl(fd, WR_RED_LEDS)#ligando os leds vermelhos
-        data = 0xFFFFFFFF
-        os.write(fd, data.to_bytes(4, 'little'))
-        ioctl(fd, WR_GREEN_LEDS)#apagando os leds verdes
-        data = 0x00000000
-        os.write(fd, data.to_bytes(4, 'little'))
-        os.close(fd)
-        janela = Toplevel()
-        janela.config(bg = "red")
-        if(num == 0):
-            textinho = "O alarme tocou e os bandidos encurralarram vc e sua equipe :(\nF to respect"
-        elif(num == 1):
-            textinho = "Seus passos fizeram muito barulho e os bandidos encurralarram vc e sua equipe :(\nF to respect"
-        elif(num == 2):
-            textinho = "Foi identificado que o sistema estava sendo invadido e os bandidos encurralarram vc e sua equipe :(\nF to respect"
-        else:
-            textinho = "KABOOM? Yes Rico, KABOOM!\nF to respect"
-        texto = Label(janela, text=textinho, fg='black',font="Arial 20 bold", bg="red")
-        texto.grid(column=0, row=5, padx=10, pady=10)
-        botao = Button(janela, text="F", command=Sair, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
-        botao.grid(column=0, row=10, padx=10, pady=10)
+        tela.detroy()
+        criar_menu()
 
     def senha():#O PRIMEIRO DESAFIO
-        #Essa função sãos os loops que leem os push buttons
-        valor = [0,0,0,0]
-        for i in range(4):
-            input()
-            ioctl(fd, RD_PBUTTONS) #setando para ler os push buttons
-            valor[i] = os.read(fd, 1) #lendo um byte dos push buttons
+        global try1
+        global valor
+        #Essa função sãos os loops que leem os push buttons 
+
         if(valor[0] == b'\x01' and valor[1] == b'\x00' and valor[2] == b'\x02' and valor[3] == b'\x04'): #resposta: 1024 bytes
             ioctl(fd, WR_RED_LEDS) #se acertou, os leds vermelhos são apagados e os verdes acesos
             data = 0x0
@@ -387,6 +406,10 @@ def criar_porta():
             os.write(fd, data.to_bytes(4, 'little'))
             sala()
         else:
+            try1+=1
+            if try1==2:
+                tela.destroy()
+                chorou_bb(0)
             ioctl(fd, WR_RED_LEDS) #se errou, os leds vermelhos são acesos e os verdes apagados
             data = 0xFFFFFFFF
             os.write(fd, data.to_bytes(4, 'little'))
@@ -394,53 +417,41 @@ def criar_porta():
             data = 0x0
             os.write(fd, data.to_bytes(4, 'little'))
             print("SÓ MAIS UMA CHANCE!")
-        for i in range(4):
-            input()
-            ioctl(fd, RD_PBUTTONS) #setando para ler os push buttons
-            valor[i] = os.read(fd, 1) #lendo um byte dos push buttons
-        if(valor[0] == b'\x01' and valor[1] == b'\x00' and valor[2] == b'\x02' and valor[3] == b'\x04'): #resposta: 1024 bytes
-            ioctl(fd, WR_RED_LEDS) #se acertou, os leds vermelhos são apagados e os verdes acesos
-            data = 0x0
-            os.write(fd, data.to_bytes(4, 'little'))
-            ioctl(fd, WR_GREEN_LEDS)
-            data = 0xFFFFFFFF
-            os.write(fd, data.to_bytes(4, 'little'))
-            sala()
-        else:
-            ioctl(fd, WR_RED_LEDS) #se errou, os leds vermelhos são acesos e os verdes apagados
-            data = 0xFFFFFFFF
-            os.write(fd, data.to_bytes(4, 'little'))
-            ioctl(fd, WR_GREEN_LEDS)
-            data = 0x0
-            os.write(fd, data.to_bytes(4, 'little'))
-            print("CHOROU BB!")
-            chorou_bb(0)
 
 
-    tela.config(bg = "black")
+    def click():
+        global i
+        global valor
+
+        ioctl(fd, RD_PBUTTONS) #setando para ler os push buttons
+        valor[i] = os.read(fd, 1) #lendo um byte dos push buttons
+        i=i+1
+
     img = PhotoImage(file='../Imagens/porta.png')
-    imagem = Label(tela, image=img, height=500, width=900)
-    imagem.grid(column=0, row=0)
-    textinho = "Seu primeiro desafio é acertar a senha da fechadura!!"
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=5, padx=10, pady=10)
-    textinho = "Vc terá que informar quatro algarismos através dos push buttons\nUm de cada vez! Forneca um algarismo (segurando!) e envie a tecla 'a' no terminal."
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=10, padx=10, pady=10)
-    textinho = "Se vc acertar o algarismo, os leds verdes ficam ligados, caso contrário, os vermelhos."
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=15, padx=10, pady=10)
-    textinho = "Vc tem somente duas tentativas antes do alarme tocar!!"
-    texto = Label(tela, text=textinho, fg='white',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=20, padx=10, pady=10)
-    textinho = "Dica para a senha: Quantidade de bytes reservados para a IVT. Informe os algarismos nessa ordem: milhar->centena->dezena->unidade."
-    texto = Label(tela, text=textinho, fg='red',font="Arial 5 bold", bg='black')
-    texto.grid(column=0, row=25, padx=10, pady=10)
-    botao = Button(tela, text="Próximo", command=senha, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
-    botao.grid(column=0, row=30, padx=10, pady=10)
-    textinho = "Após apertar o ""Próximo"", pode fechar essa tela"
-    texto = Label(tela, text=textinho, fg='red',font="Arial 10 bold", bg='black')
-    texto.grid(column=0, row=35, padx=10, pady=10)   
+
+    canvas = Canvas(tela)
+    canvas.pack(fill="both", expand=True)
+    canvas.create_image( (1920/2), (1080/2), image = img, anchor = "center")
+
+    Label(
+        canvas,
+        text= """Seu primeiro desafio é acertar a senha da fechadura!!
+                Vc terá que informar quatro algarismos através dos push buttons\nUm de cada vez! Forneca um algarismo (segurando!) e clique em "Enter".
+                Se vc acertar o algarismo, os leds verdes ficam ligados, caso contrário, os vermelhos.
+                Vc tem somente duas tentativas antes do alarme tocar!!
+                Dica para a senha: Quantidade de bytes reservados para a IVT. Informe os algarismos nessa ordem: milhar->centena->dezena->unidade.
+                Após, aperte "Confirma" para prosseguir.""",
+        padx=20,
+        pady=20,
+        bg='#ffbf00',
+        font=f
+    ).pack(side=TOP, fill=X)
+    
+    botao = Button(canvas, text="Confirma", command=senha, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
+    botao.pack(fill=X, side=BOTTOM)
+
+    botao = Button(canvas, text="Enter", command=click, bg='dark blue', fg='white', font="Arial 10 bold", activebackground='red', activeforeground='white', height=2, width=4)
+    botao.pack(fill=X, side=BOTTOM)
 
     tela.mainloop()
 
@@ -458,7 +469,7 @@ def criar_sobre():
 
     Label(
         tela,
-        text="Desenvolvido por atss, lnb, mvfs, rrm2, vgc3\n",
+        text="Obrigado por jogar!\nDesenvolvido por atss, lnb, mvfs, rrm2, vgc3\n",
         padx=20,
         pady=20,
         bg='#ffbf00',
@@ -517,6 +528,27 @@ def criar_menu():
         font=f,
         command=Jogar
         ).pack(fill=X, side=BOTTOM)
+
+    global valor, i, ry1, array_switches, j
+    valor = [0,0,0,0]
+    i = 0
+    try1 = 0
+
+    array_switches = [0,0,0,0]
+    j=0
+
+    ioctl(fd, WR_RED_LEDS) #se acertou, os leds vermelhos são apagados e os verdes acesos
+    data = 0x0002aaaa
+    os.write(fd, data.to_bytes(4, 'little'))
+    ioctl(fd, WR_GREEN_LEDS)
+    data = 0x00000155
+    os.write(fd, data.to_bytes(4, 'little'))
+    ioctl(fd, WR_L_DISPLAY) #se acertou, os leds vermelhos são apagados e os verdes acesos
+    data = 0x3F3F3F3F
+    os.write(fd, data.to_bytes(4, 'little'))
+    ioctl(fd, WR_R_DISPLAY)
+    data = 0x3F3F3F3F
+    os.write(fd, data.to_bytes(4, 'little'))
 
     tela.mainloop()
 
